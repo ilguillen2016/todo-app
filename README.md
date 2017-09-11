@@ -17,13 +17,18 @@ Create a basic Todo List app using Vanilla JavaScript. A basic user interface th
 - A JS Module Pattern **must** be used
 
 
-### TODOs
-- [ ] Use Vanilla JS for DOM manipulation
-- [ ] Use JS Module Pattern
+### TODOs 
+#### Functionality
 - [ ] Add *add new task* functionality
 - [ ] Add *delete task* functionality
 - [ ] Add *edit task* functionality
 - [ ] Add *check/uncheck* functionality
 - [ ] Add *order* functionality
+- [ ] Use JS Module Pattern
+- [ ] Use Vanilla JS for DOM manipulation
+
+#### UI
+- [ ] *Display Todos* button
+- [ ] *Toggle all* button
 - [ ] Define UI colours
 
