@@ -4,7 +4,7 @@ console.log('JS successfully loaded');
 
 const todoList = {
     todos: [],
-    displayTodos() {
+    /* displayTodos() {
         if (this.todos.length === 0) {
             console.log('TODO list is empty!');
         } else {
@@ -21,26 +21,22 @@ const todoList = {
                 // }
             }
         }
-    },
+    }, */
     addTodo(todoText) {
         this.todos.push({
             todoText,
             status: false
         });
-        this.displayTodos();
     },
     changeTodo(index, todoText) {
         this.todos[index].todoText = todoText;
-        this.displayTodos();
     },
     deleteTodo(index) {
         this.todos.splice(index, 1);
-        this.displayTodos();
     },
     toggleStatus(index) {
         const todo = this.todos[index];
         todo.status = !todo.status;
-        this.displayTodos();
     },
     toggleAll() {
         const totalTodos = this.todos.length;
@@ -57,13 +53,10 @@ const todoList = {
                 this.todos[i].status = false :
                 this.todos[i].status = true;
         }
-        this.displayTodos();
     }
 };
 
 // Access buttons
-const displayButton = document.getElementById('btn-display');
-
 const addButton = document.getElementById('btn-add');
 const addTextInput = document.getElementById('input-add');
 
@@ -71,40 +64,79 @@ const changeButton = document.getElementById('btn-change');
 const changePositionInput = document.getElementById('input-position-change');
 const changeTextInput = document.getElementById('input-change');
 
-const deleteButton = document.getElementById('btn-delete');
-const deletePositionInput = document.getElementById('input-position-delete');
-
 const toggleOneButton = document.getElementById('btn-completed');
 const togglePositionInput = document.getElementById('input-position-completed');
 
 const toggleAllButton = document.getElementById('btn-toggle');
 
-// Run functions
-displayButton.addEventListener('click', () => {
-    todoList.displayTodos();
-});
+// Refactoring code
+const view = {
+    displayTodos() {
+        const ul = document.querySelector('ul');
+        ul.innerHTML = '';
 
+        for (let i = 0; i < todoList.todos.length; i++) {
+            const li = document.createElement('li');
+            const todo = todoList.todos[i];
+
+            let todoWithCheckMark = '';
+            todoWithCheckMark = (todo.status === true ? `(x) ${todo.todoText}` : `( ) ${todo.todoText}`);
+
+            li.id = i;
+            li.textContent = todoWithCheckMark;
+            li.appendChild(this.createDeleteButton());
+            ul.appendChild(li);
+        }
+    },
+    createDeleteButton() {
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'btn-delete';
+        return deleteButton;
+    },
+    setUpEventListeners() {
+        const todosUl = document.querySelector('ul');
+        todosUl.addEventListener('click', (event) => {
+            // Get the element that was clicked on
+            const elementClicked = event.target;
+
+            // Check if elementClicked is a delete button
+            if (elementClicked.className === 'btn-delete') {
+                // Run deleteButton(index)
+                deleteTodo(parseInt(elementClicked.parentNode.id, 10));
+            }
+        });
+    }
+};
+
+view.setUpEventListeners();
+
+// Run functions
 addButton.addEventListener('click', () => {
     todoList.addTodo(addTextInput.value);
     addTextInput.value = '';
+    view.displayTodos();
 });
+
+function deleteTodo(index) {
+    todoList.deleteTodo(index);
+    view.displayTodos();
+}
 
 changeButton.addEventListener('click', () => {
     todoList.changeTodo(changePositionInput.valueAsNumber, changeTextInput.value);
     changePositionInput.value = '';
     changeTextInput.value = '';
-});
-
-deleteButton.addEventListener('click', () => {
-    todoList.deleteTodo(deletePositionInput.valueAsNumber);
-    deletePositionInput.value = '';
+    view.displayTodos();
 });
 
 toggleOneButton.addEventListener('click', () => {
     todoList.toggleStatus(togglePositionInput.valueAsNumber);
     togglePositionInput.value = '';
+    view.displayTodos();
 });
 
 toggleAllButton.addEventListener('click', () => {
     todoList.toggleAll();
+    view.displayTodos();
 });
