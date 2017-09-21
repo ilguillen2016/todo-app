@@ -4,24 +4,6 @@ console.log('JS successfully loaded');
 
 const todoList = {
     todos: [],
-    /* displayTodos() {
-        if (this.todos.length === 0) {
-            console.log('TODO list is empty!');
-        } else {
-            console.log('TODOs:');
-            for (let i = 0; i < this.todos.length; i++) {
-                console.log(
-                    this.todos[i].status === true ?
-                        `(x) ${this.todos[i].todoText}` :
-                        `( ) ${this.todos[i].todoText}`);
-                // if (this.todos[i].status === true) {
-                //     console.log('(x)', this.todos[i].todoText);
-                // } else {
-                //     console.log('( )', this.todos[i].todoText);
-                // }
-            }
-        }
-    }, */
     addTodo(todoText) {
         this.todos.push({
             todoText,
@@ -41,18 +23,20 @@ const todoList = {
     toggleAll() {
         const totalTodos = this.todos.length;
         let completedTodos = 0;
+
         // Get number of completed Todos
-        for (let i = 0; i < totalTodos; i++) {
-            if (this.todos[i].status === true) {
+        this.todos.forEach((todo) => {
+            if (todo.status === true) {
                 completedTodos++;
             }
-        }
+        });
+
         // Toggle All
-        for (let i = 0; i < totalTodos; i++) {
-            (completedTodos === totalTodos) ?
-                this.todos[i].status = false :
-                this.todos[i].status = true;
-        }
+        this.todos.forEach((todo) => {
+            completedTodos === totalTodos ?
+                todo.status = false :
+                todo.status = true;
+        });
     }
 };
 
@@ -75,18 +59,20 @@ const view = {
         const ul = document.querySelector('ul');
         ul.innerHTML = '';
 
-        for (let i = 0; i < todoList.todos.length; i++) {
+        todoList.todos.forEach((todo, index) => {
             const li = document.createElement('li');
-            const todo = todoList.todos[i];
-
             let todoWithCheckMark = '';
-            todoWithCheckMark = (todo.status === true ? `(x) ${todo.todoText}` : `( ) ${todo.todoText}`);
 
-            li.id = i;
+            todoWithCheckMark =
+                (todo.status === true ?
+                    `(x) ${todo.todoText}` :
+                    `( ) ${todo.todoText}`);
+
+            li.id = index;
             li.textContent = todoWithCheckMark;
             li.appendChild(this.createDeleteButton());
             ul.appendChild(li);
-        }
+        }, this);
     },
     createDeleteButton() {
         const deleteButton = document.createElement('button');
